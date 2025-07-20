@@ -8,11 +8,16 @@ const hole = "O";
 const fieldCharacter = "░";
 const pathCharacter = "*";
 
+const resultFoundHat = "found hat";
+const resultFoundHole = "found hole";
+const resultFoundField = "found filed";
+const resultInsideBoard = "inside board";
+
 class Board {
   constructor(board = [[]]) {
     this.newBoard = board;
-    this.currentPosition = {x:0, y:0}
-    this.setCurrentPosition()
+    this.currentPosition = { x: 0, y: 0 };
+    this.setCurrentPosition();
   }
   print() {
     // clear();
@@ -28,27 +33,39 @@ class Board {
   moveRight() {
     console.log("Character moves right");
     const nextPosition = {
-      x : this.currentPosition.x+1,
-      y : this.currentPosition
+      x: this.currentPosition.x + 1,
+      y: this.currentPosition.y,
+    };
+    const result = this.checkBeforeMove(nextPosition);
+    if (result === resultFoundField) {
+      this.currentPosition.x = nextPosition.x;
+      this.currentPosition.y = nextPosition.y;
+      this.newBoard[this.currentPosition.y][this.currentPosition.x] =
+        pathCharacter;
     }
+    return result;
   }
-  checkBeforeMove(nextPosition){
+  checkBeforeMove(nextPosition) {
     const boardHeight = this.newBoard.length;
     const boardWidth = this.newBoard[0].length;
-    if (this.newBoard[nextPosition.y][nextPosition.x] === fieldCharacter){
-      return "found field"
-    } else if (this.newBoard[nextPosition.y][nextPosition.x] === hat){
-      return "found hat"
-    } else if (this.newBoard[nextPosition.y][nextPosition.x] === hole){
-      return "found hole"
+    if (this.newBoard[nextPosition.y][nextPosition.x] === fieldCharacter) {
+      return resultFoundField;
+    } else if (this.newBoard[nextPosition.y][nextPosition.x] === hat) {
+      return resultFoundHat;
+    } else if (this.newBoard[nextPosition.y][nextPosition.x] === hole) {
+      return resultFoundHole;
     } else if (
-      nextPosition.y < boardHeight  // Check below
-      && nextPosition.y >= 0 // Check above
-      && nextPosition.x < boardWidth // Check right
-      && nextPosition.x >= 0)// Check left 
-      {return "inside board"
+      nextPosition.y < boardHeight && // Check below
+      nextPosition.y >= 0 && // Check above
+      nextPosition.x < boardWidth && // Check right
+      nextPosition.x >= 0 // Check left
+    ) {
+      return resultInsideBoard;
+    } else {
+      return "Unknown Move"
     }
   }
+
   moveLeft() {
     console.log("Character moves left");
   }
@@ -58,19 +75,19 @@ class Board {
   moveDown() {
     console.log("Character moves down");
   }
-  setCurrentPosition(){
-    for(let i = 0; i < this.newBoard.length; i++){
-      for(let j=0; j < this.newBoard[i].length; j++){
+  setCurrentPosition() {
+    for (let i = 0; i < this.newBoard.length; i++) {
+      for (let j = 0; j < this.newBoard[i].length; j++) {
         console.log(`i = ${i} j = ${j} Value = ${this.newBoard[i][j]}`);
-        if (this.newBoard[i][j] === "*"){
+        if (this.newBoard[i][j] === "*") {
           this.currentPosition.x = j;
           this.currentPosition.y = i;
         }
       }
     }
   }
-  getCurrentPosition(){
-    return `x=${this.currentPosition.x} y=${this.currentPosition.y}`
+  getCurrentPosition() {
+    return `x=${this.currentPosition.x} y=${this.currentPosition.y}`;
   }
 }
 
@@ -80,10 +97,9 @@ const boardArray = new Board([
   ["░", "O", "^"],
 ]);
 
-
-while (true){
+while (true) {
   boardArray.print();
-  console.log(`This is current position: ${boardArray.getCurrentPosition()}`)
+  console.log(`This is current position: ${boardArray.getCurrentPosition()}`);
   const moveCommand = prompt("Enter your command: ");
   console.log(`Your command is ${moveCommand}.`);
   handleCommand(moveCommand);
