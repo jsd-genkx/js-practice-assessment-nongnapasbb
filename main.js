@@ -5,12 +5,6 @@ import clear from "clear-screen";
 
 const prompt = promptSync({ sigint: true });
 
-
-const hat = "^";
-const hole = "O";
-const fieldCharacter = "░";
-const pathCharacter = "*";
-
 class Field {
 	constructor(field = [[]]) {
 		this.field = field;

@@ -15,5 +15,8 @@
 	"dependencies": {
 		"clear-screen": "^1.0.0",
 		"prompt-sync": "^4.2.0"
+	},
+	"devDependencies": {
+		"@types/node": "^24.0.15"
 	}
 }
