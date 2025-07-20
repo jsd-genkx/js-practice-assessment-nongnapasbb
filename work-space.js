@@ -11,6 +11,8 @@ const pathCharacter = "*";
 class Board {
   constructor(board = [[]]) {
     this.newBoard = board;
+    this.currentPosition = {x:0, y:0}
+    this.setCurrentPosition()
   }
   print() {
     // clear();
@@ -25,6 +27,27 @@ class Board {
   }
   moveRight() {
     console.log("Character moves right");
+    const nextPosition = {
+      x : this.currentPosition.x+1,
+      y : this.currentPosition
+    }
+  }
+  checkBeforeMove(nextPosition){
+    const boardHeight = this.newBoard.length;
+    const boardWidth = this.newBoard[0].length;
+    if (this.newBoard[nextPosition.y][nextPosition.x] === fieldCharacter){
+      return "found field"
+    } else if (this.newBoard[nextPosition.y][nextPosition.x] === hat){
+      return "found hat"
+    } else if (this.newBoard[nextPosition.y][nextPosition.x] === hole){
+      return "found hole"
+    } else if (
+      nextPosition.y < boardHeight  // Check below
+      && nextPosition.y >= 0 // Check above
+      && nextPosition.x < boardWidth // Check right
+      && nextPosition.x >= 0)// Check left 
+      {return "inside board"
+    }
   }
   moveLeft() {
     console.log("Character moves left");
@@ -35,19 +58,34 @@ class Board {
   moveDown() {
     console.log("Character moves down");
   }
+  setCurrentPosition(){
+    for(let i = 0; i < this.newBoard.length; i++){
+      for(let j=0; j < this.newBoard[i].length; j++){
+        console.log(`i = ${i} j = ${j} Value = ${this.newBoard[i][j]}`);
+        if (this.newBoard[i][j] === "*"){
+          this.currentPosition.x = j;
+          this.currentPosition.y = i;
+        }
+      }
+    }
+  }
+  getCurrentPosition(){
+    return `x=${this.currentPosition.x} y=${this.currentPosition.y}`
+  }
 }
 
 const boardArray = new Board([
-  ["*", "░", "░"],
+  ["O", "*", "░"],
   ["O", "░", "░"],
   ["░", "O", "^"],
 ]);
 
 
-while (true) {
+while (true){
   boardArray.print();
+  console.log(`This is current position: ${boardArray.getCurrentPosition()}`)
   const moveCommand = prompt("Enter your command: ");
-  console.log(`Your command is ${moveCommand}`);
+  console.log(`Your command is ${moveCommand}.`);
   handleCommand(moveCommand);
   if (moveCommand === "q") {
     break;
@@ -70,6 +108,6 @@ function handleCommand(moveCommand) {
   } else if (moveCommand === "q") {
     console.log("quit");
   } else {
-    console.log("command not supported");
+    console.log("Unknown command.Please try again.");
   }
 }
