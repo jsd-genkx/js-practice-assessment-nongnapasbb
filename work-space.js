@@ -1,37 +1,75 @@
 import promptSync from "prompt-sync";
 import clear from "clear-screen";
 
- const prompt = promptSync({ sigint: true });
+const prompt = promptSync({ sigint: true });
 
-class Field {
-    constructor(field = [[]]){
-        console.log(field)
+const hat = "^";
+const hole = "O";
+const fieldCharacter = "░";
+const pathCharacter = "*";
+
+class Board {
+  constructor(board = [[]]) {
+    this.newBoard = board;
+  }
+  print() {
+    // clear();
+    for (let i = 0; i < this.newBoard.length; i++) {
+      const boardRow = this.newBoard[i];
+      // console.log(boardRow);
+      for (let j = 0; j < boardRow.length; j++) {
+        process.stdout.write(boardRow[j]);
+      }
+      process.stdout.write("\n");
     }
+  }
+  moveRight() {
+    console.log("Character moves right");
+  }
+  moveLeft() {
+    console.log("Character moves left");
+  }
+  moveUp() {
+    console.log("Character moves up");
+  }
+  moveDown() {
+    console.log("Character moves down");
+  }
 }
 
-const fieldArray  = new Field([
-["*","░","░"],
-["O","░","░"],
-["░","O","^"],
+const boardArray = new Board([
+  ["*", "░", "░"],
+  ["O", "░", "░"],
+  ["░", "O", "^"],
 ]);
 
 
-while(true){ 
-    
-const moveCommand = prompt('Enter your command');
-console.log(`Your command is ${moveCommand}`);
-if (moveCommand === "quit"){
-break;
+while (true) {
+  boardArray.print();
+  const moveCommand = prompt("Enter your command: ");
+  console.log(`Your command is ${moveCommand}`);
+  handleCommand(moveCommand);
+  if (moveCommand === "q") {
+    break;
+  }
 }
+
+function handleCommand(moveCommand) {
+  if (moveCommand === "right") {
+    boardArray.moveRight();
+    console.log("go right");
+  } else if (moveCommand === "left") {
+    boardArray.moveLeft();
+    console.log("go left");
+  } else if (moveCommand === "up") {
+    boardArray.moveUp();
+    console.log("go up");
+  } else if (moveCommand === "down") {
+    console.log("go down");
+    boardArray.moveDown();
+  } else if (moveCommand === "q") {
+    console.log("quit");
+  } else {
+    console.log("command not supported");
+  }
 }
-
-
-
-
-
-
-
-
-
-
-//1.กำหนด constructor สนาม สร้างสนาม
