@@ -12,6 +12,7 @@ const resultFoundHat = "found hat";
 const resultFoundHole = "found hole";
 const resultFoundField = "found filed";
 const resultInsideBoard = "inside board";
+const resultOutsideBoard = "outside board";
 
 class Board {
   constructor(board = [[]]) {
@@ -30,24 +31,12 @@ class Board {
       process.stdout.write("\n");
     }
   }
-  moveRight() {
-    console.log("Character moves right");
-    const nextPosition = {
-      x: this.currentPosition.x + 1,
-      y: this.currentPosition.y,
-    };
-    const result = this.checkBeforeMove(nextPosition);
-    if (result === resultFoundField) {
-      this.currentPosition.x = nextPosition.x;
-      this.currentPosition.y = nextPosition.y;
-      this.newBoard[this.currentPosition.y][this.currentPosition.x] =
-        pathCharacter;
-    }
-    return result;
-  }
-  checkBeforeMove(nextPosition) {
+    checkBeforeMove(nextPosition) {
     const boardHeight = this.newBoard.length;
     const boardWidth = this.newBoard[0].length;
+    if(nextPosition.y < 0 || nextPosition.x < 0){
+      return resultOutsideBoard
+    }
     if (this.newBoard[nextPosition.y][nextPosition.x] === fieldCharacter) {
       return resultFoundField;
     } else if (this.newBoard[nextPosition.y][nextPosition.x] === hat) {
@@ -62,18 +51,55 @@ class Board {
     ) {
       return resultInsideBoard;
     } else {
-      return "Unknown Move"
+      return resultOutsideBoard;
     }
   }
+move(nextPosition){
+   const result = this.checkBeforeMove(nextPosition);
+    if (result === resultFoundField) {
+      this.currentPosition.x = nextPosition.x;
+      this.currentPosition.y = nextPosition.y;
+      this.newBoard[this.currentPosition.y][this.currentPosition.x] =
+        pathCharacter;
+    }
+    return result;
+}
 
+  moveRight() {
+    console.log("Character moves right");
+    const nextPosition = {
+      x: this.currentPosition.x + 1,
+      y: this.currentPosition.y,
+    };
+    const result = this.move(nextPosition);
+    return result;
+  }
   moveLeft() {
     console.log("Character moves left");
+      const nextPosition = {
+      x: this.currentPosition.x - 1,
+      y: this.currentPosition.y,
+    };
+    const result = this.move(nextPosition);
+    return result;
   }
   moveUp() {
     console.log("Character moves up");
+        const nextPosition = {
+      x: this.currentPosition.x,
+      y: this.currentPosition.y - 1,
+    };
+    const result = this.move(nextPosition);
+    return result;
   }
   moveDown() {
     console.log("Character moves down");
+    const nextPosition = {
+      x: this.currentPosition.x,
+      y: this.currentPosition.y + 1,
+    };
+    const result = this.move(nextPosition);
+    return result;
   }
   setCurrentPosition() {
     for (let i = 0; i < this.newBoard.length; i++) {
@@ -102,7 +128,19 @@ while (true) {
   console.log(`This is current position: ${boardArray.getCurrentPosition()}`);
   const moveCommand = prompt("Enter your command: ");
   console.log(`Your command is ${moveCommand}.`);
-  handleCommand(moveCommand);
+  const result = handleCommand(moveCommand);
+  if (result === resultOutsideBoard){
+    console.log("You are outside of the board. You lose!");
+    break;
+  } else if (result === resultFoundHole){
+    console.log("You fell into a hole. You lose!");
+    break;
+  } else if (result === resultFoundHat){
+    console.log("You found the hat. Congrats! You win!");
+    break;
+  } else {
+    console.log("You are still inside the board. Keep playing!");
+  }
   if (moveCommand === "q") {
     break;
   }
@@ -110,17 +148,21 @@ while (true) {
 
 function handleCommand(moveCommand) {
   if (moveCommand === "right") {
-    boardArray.moveRight();
     console.log("go right");
+    const result = boardArray.moveRight();
+    return result
   } else if (moveCommand === "left") {
-    boardArray.moveLeft();
     console.log("go left");
+    const result = boardArray.moveLeft();
+    return result
   } else if (moveCommand === "up") {
-    boardArray.moveUp();
     console.log("go up");
+    const result = boardArray.moveUp();
+    return result
   } else if (moveCommand === "down") {
     console.log("go down");
-    boardArray.moveDown();
+    const result = boardArray.moveDown();
+    return result
   } else if (moveCommand === "q") {
     console.log("quit");
   } else {
